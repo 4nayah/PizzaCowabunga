@@ -10,7 +10,7 @@
 		<h1>Pizza Cowabunga</h1>
 	</nav>
 	
-	<div id="overlay" style="display:one">
+	<div id="overlay" style="display:none">
 		<div id="overlay_popup" >
 			<div id="ShoppedPizza">
 
@@ -55,7 +55,7 @@
 		let articlesCount = 1;
 		function AddToBasket(id){
 			let counter = document.getElementById("basket_counter");
-			counter.innerHTML = articlesCount++;
+			counter.innerHTML = ShoppedPizza.length;
 			let currentPizza = Pizzas.filter(c=>c.id == id)[0];
 			ShoppedPizza.push(currentPizza);
 			console.log(ShoppedPizza);
@@ -74,7 +74,7 @@
 			for (var i =0; i <  Pizzas.length; i++) {
 				let clone = template.cloneNode(true);
 				clone.style.display = "flex" ;
-				clone.children[0].src = "https://via.placeholder.com/150";
+				clone.children[0].src = "data:image/png;base64,"+Pizzas[i].base64;
 				clone.children[1].children[0].innerHTML = Pizzas[i].type;
 				clone.children[1].children[1].innerHTML = Pizzas[i].libelle;
 				clone.children[1].children[2].innerHTML = Pizzas[i].prix + "€";
@@ -101,12 +101,43 @@
 			for (var i =0; i <  ShoppedPizza.length; i++) {
 				let td = document.createElement("div");
                 td.innerHTML = ShoppedPizza[i].type;
+                let btn = document.createElement("button");
+                btn.innerHTML = "x";
+                btn.setAttribute("onclick", "RemovePizza("+ShoppedPizza[i].id+")");
+                td.append(btn);
 				list.appendChild(td);
 			}
 
-			document.getElementById("PriceTotal").innerHTML = Math.round(ShoppedPizza.map(c=>c.prix).reduce((a, b) => a + b, 0) *100)/100;
+			document.getElementById("PriceTotal").innerHTML = Math.round(ShoppedPizza.map(c=>c.prix).reduce((a, b) => a + b, 0) *100)/100 + "€";
 
 			
+		}
+
+		function RemovePizza(id){
+			let pizzaToDelete = Pizzas.filter(c=>c.id == id)[0];
+			let list = document.getElementById("ShoppedPizza");
+			list.innerHTML = "";
+			if(ShoppedPizza.length>1){
+				ShoppedPizza.splice(Pizzas.indexOf(pizzaToDelete),1);
+
+			
+			for (var i =0; i <  ShoppedPizza.length; i++) {
+				let td = document.createElement("div");
+                td.innerHTML = ShoppedPizza[i].type;
+                let btn = document.createElement("button");
+                btn.innerHTML = "x";
+                btn.setAttribute("onclick", "RemovePizza("+ShoppedPizza[i].id+")");
+                td.append(btn);
+				list.appendChild(td);
+			}
+		}else{
+			ShoppedPizza = [];
+		}
+			
+			document.getElementById("PriceTotal").innerHTML = Math.round(ShoppedPizza.map(c=>c.prix).reduce((a, b) => a + b, 0) *100)/100 + "€";
+
+			let counter = document.getElementById("basket_counter");
+			counter.innerHTML = ShoppedPizza.length;
 		}
 		
 
