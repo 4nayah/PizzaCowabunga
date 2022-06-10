@@ -17,8 +17,9 @@ public class Base64Converter {
             try (FileInputStream fileInputStreamReader = new FileInputStream(file)) {
 				byte[] bytes = new byte[(int)file.length()];
 				fileInputStreamReader.read(bytes);
-			}
-            encodedfile = Base64.getEncoder().toString();
+			
+            encodedfile = Base64.getEncoder().encodeToString(bytes);
+            }
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
